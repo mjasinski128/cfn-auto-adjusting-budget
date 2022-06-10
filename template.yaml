@@ -17,7 +17,7 @@ Parameters:
 
   LambdaDeployBucket:
     Type: String
-    Default: "cfn-publick-bucket-mjasinski128"
+    Default: "cfn-public-bucket-mjasinski128"
 
   LambdaDeployPackage:
     Type: String
