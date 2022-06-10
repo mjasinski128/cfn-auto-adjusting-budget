@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  Creates auto adjusting AWS Budget with e-mail notification.
+
+Parameters:
+  BudgetName:
+    Type: String
+    Default: "autoBudget110prc"
+
+  Amount:
+    Type: Number
+    Default: 110
+
+  Email:
+    Type: String
+    Default: "mateusz.jasinski+budget@gmail.com"
+
+  LambdaDeployBucket:
+    Type: String
+    Default: "cfn-publick-bucket-mjasinski128"
+
+  LambdaDeployPackage:
+    Type: String
+    Default: "lambda-deployment-package.zip"
+
+Resources:
+  AutoBudgetResource:
+    Type: "Custom::AutoBudget"
+    Properties:
+      ServiceToken: !GetAtt LambdaFunction.Arn
+      Name: !Ref BudgetName
+      Amount: !Ref Amount
+      Email: !Ref Email
+
+  LambdaFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: LambdaFunctionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - "budgets:ViewBudget"
+                  - "budgets:ModifyBudget"
+                  - "budgets:CreateBudget"
+                  - "budgets:DeleteBudget"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - cloudwatch:*
+                Resource: "*"
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.9
+      Timeout: 15
+      Handler: index.handler
+      Role: !GetAtt LambdaFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaDeployBucket #cfn-publick-bucket-mjasinski128
+        S3Key: !Ref LambdaDeployPackage #lambda-deployment-package.zip
