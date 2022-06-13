@@ -30,7 +30,7 @@ def create_budget(name, email, amount, unit='PERCENTAGE', method='EMAIL'):
             'BudgetType': 'COST',
             'LastUpdatedTime': focm(),
             'AutoAdjustData': {
-                'AutoAdjustType': 'HISTORICAL',  # | 'FORECAST',
+                'AutoAdjustType': 'HISTORICAL',
                 'HistoricalOptions': {
                     'BudgetAdjustmentPeriod': 1,
                 },

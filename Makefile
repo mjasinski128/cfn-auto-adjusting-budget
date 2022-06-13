@@ -12,12 +12,12 @@ package-lambda:
 	aws s3api put-object-acl --bucket $(LAMBDA_DEPLOY_BUCKET)  --key $(LAMBDA_DEPLOY_PACKAGE) --acl public-read 
 
 deploy-budget:
-	 aws cloudformation create-stack \
+	aws cloudformation create-stack \
 		--stack-name $(AUTO_BUDGET_NAME) \
 		--template-body file://template.yaml \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--timeout-in-minutes 10
 
 remove-budget:
-	 aws cloudformation delete-stack \
-  		--stack-name  $(AUTO_BUDGET_NAME)
+	aws cloudformation delete-stack \
+		--stack-name $(AUTO_BUDGET_NAME)
