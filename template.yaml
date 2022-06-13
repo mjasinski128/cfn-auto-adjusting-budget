@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  Creates auto adjusting AWS Budget with e-mail notification.
+
+Parameters:
+  BudgetName:
+    Type: String
+    Default: "autoBudget110prc"
+    Description: "Budget name"
+
+  Amount:
+    Type: Number
+    Default: 110
+    Description: Trigger value in procent - i.e. 110% of base /last month invoice
+
+  Email:
+    Type: String
+    #Default: "mateusz.jasinski+budget@gmail.com"
+    AllowedPattern: '[^@]+@[^@]+\.[^@]+'
+    Description: E-mail address to deliver notifications to
+
+  LambdaDeployBucket:
+    Type: String
+    Default: "cfn-public-bucket-mjasinski128"
+    Description: S3 public or accessible to all relevant deployment roles used for Lambda deployment package
+
+  LambdaDeployPackage:
+    Type: String
+    Default: "lambda-deployment-package.zip"
+    Description: Lambda package name (key in LambdaDeployBucket bucket)
+
+Resources:
+  AutoBudgetResource:
+    Type: "Custom::AutoBudget"
+    Properties:
+      ServiceToken: !GetAtt LambdaFunction.Arn
+      Name: !Ref BudgetName
+      Amount: !Ref Amount
+      Email: !Ref Email
+
+  LambdaFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: LambdaFunctionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - "budgets:ViewBudget"
+                  - "budgets:ModifyBudget"
+                  - "budgets:CreateBudget"
+                  - "budgets:DeleteBudget"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - cloudwatch:*
+                Resource: "*"
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.9
+      Timeout: 15
+      Handler: index.handler
+      Role: !GetAtt LambdaFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaDeployBucket
+        S3Key: !Ref LambdaDeployPackage
