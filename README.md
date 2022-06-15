@@ -31,13 +31,15 @@ Deploy to single AWS account with AWS CLI
 		--template-body file://template.yaml \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--timeout-in-minutes 10 \
-        --parameters "ParameterKey=Email,ParameterValue=SOME_EMAIL_ADDRESS"
+		--parameters "ParameterKey=Email,ParameterValue=SOME_EMAIL_ADDRESS"
 ```
 
 using provided scripts:
 
 `make deploy-budget` - deploy resources using CFN template
+
 `make remove-budget` - remove budget with all created resources
+
 
 Deploy as CFN StackSet to multiple OUs (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html)
 
