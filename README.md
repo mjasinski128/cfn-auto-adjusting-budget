@@ -23,14 +23,15 @@ Custom Resource is essentially a user defined construct in CFN template that is 
 
 #### Basic ####
  
-Deploy to sigle AWS account with AWS CLI
+Deploy to single AWS account with AWS CLI
 
 ```
 	aws cloudformation create-stack \
 		--stack-name SOME_STACK_NAME \
 		--template-body file://template.yaml \
 		--capabilities CAPABILITY_NAMED_IAM \
-		--timeout-in-minutes 10
+		--timeout-in-minutes 10 \
+        --parameters "ParameterKey=Email,ParameterValue=SOME_EMAIL_ADDRESS"
 ```
 
 using provided scripts:
