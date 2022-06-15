@@ -22,7 +22,7 @@ Parameters:
   LambdaDeployBucket:
     Type: String
     Default: "cfn-public-bucket-mjasinski128"
-    Description: S3 public or accessible to all relevant deployment roles used for Lambda deployment package
+    Description: S3 public(!) or accessible to all relevant deployment roles used for deployment
 
   LambdaDeployPackage:
     Type: String

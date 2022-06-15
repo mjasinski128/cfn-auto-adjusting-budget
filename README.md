@@ -9,21 +9,43 @@ Custom Resource is essentially a user defined construct in CFN template that is 
 
 
 ### Prerequisites ###
-* make
+
+
+#### Baic #### 
+* AWS CLI
+
+#### Advanced ####
 * python3
 * pip
-* AWS CLI
+* make
 
 ### Usage ###
 
-`make package-lambda` - build deployment package and upload to shared location
+#### Basic ####
+ 
+Deploy to sigle AWS account with AWS CLI
+
+```
+	aws cloudformation create-stack \
+		--stack-name SOME_STACK_NAME \
+		--template-body file://template.yaml \
+		--capabilities CAPABILITY_NAMED_IAM \
+		--timeout-in-minutes 10
+```
+
+using provided scripts:
 
 `make deploy-budget` - deploy resources using CFN template
-
 `make remove-budget` - remove budget with all created resources
+
+Deploy as CFN StackSet to multiple OUs (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html)
+
+#### Advanced ####
+
+`make package-lambda` - build deployment package and upload to shared location - required only after change to Lambda code.
 
 
 ### Current limitations ###
-* deployment relies on publicly readable S3 bucket - Lambda requires requires from dedicated bundle/package that contains all dependancies. As such it has to be referenced by CFN template as zip bundle external to CFN template and accessible during deployment.
+Provided sample relies on publicly readable S3 bucket - Lambda requires dedicated bundle/package that contains all dependancies. As such it has to be referenced by CFN template as zip bundle external to main template and must be accessible/redable during deployment.
 It is strongly recommended to use location that is restricted to only IAM role used for CloudFormation deployment.
 
