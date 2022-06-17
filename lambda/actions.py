@@ -70,10 +70,10 @@ def delete_budget(name):
 
 def upsert_budget(name, email, amount, unit='PERCENTAGE', method='EMAIL'):
     if get_budget(name) == None:
-        print('Create budget')
+        print('Create budget '+name)
         create_budget(name, email, amount, unit, method)
     else:
-        print('Replace budget')
+        print('Replace budget '+name)
         delete_budget(name)
         create_budget(name, email, amount, unit, method)
 

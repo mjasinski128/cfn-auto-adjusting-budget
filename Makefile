@@ -1,7 +1,13 @@
 
-AUTO_BUDGET_NAME ?= autoMonthlyBudgetResource
+AUTO_BUDGET_NAME ?= autoMonthlyBudget110
 LAMBDA_DEPLOY_BUCKET ?= cfn-public-bucket-mjasinski128
-LAMBDA_DEPLOY_PACKAGE ?= lambda-deployment-package.zip
+LAMBDA_DEPLOY_PACKAGE ?= autobudget-lambda-deployment-package.zip
+EMAIL_ADDRESS ?= mateusz.jasinski@gmail.com
+
+local-invoke:
+	python3 -m venv lambda/venv
+	. lambda/venv/bin/activate
+	python3 lambda/test.py event.json
 
 package-lambda:
 	python3 -m venv lambda/venv
@@ -16,7 +22,8 @@ deploy-budget:
 		--stack-name $(AUTO_BUDGET_NAME) \
 		--template-body file://template.yaml \
 		--capabilities CAPABILITY_NAMED_IAM \
-		--timeout-in-minutes 10
+		--timeout-in-minutes 10 \
+		--parameters "ParameterKey=Email,ParameterValue=$(EMAIL_ADDRESS)"
 
 remove-budget:
 	aws cloudformation delete-stack \
