@@ -36,7 +36,7 @@ Deploy to single AWS account with AWS CLI
 
 using provided scripts:
 
-`make deploy-budget` - deploy resources using CFN template
+`make deploy-budget EMAIL_ADDRESS=SOME_EMAIL_ADDRESS` - deploy resources using CFN template
 
 `make remove-budget` - remove budget with all created resources
 

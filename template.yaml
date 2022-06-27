@@ -1,13 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
-  Creates auto adjusting AWS Budget with e-mail notification.
+  Auto adjusting AWS Budget with e-mail notification.
 
 Parameters:
-  BudgetName:
-    Type: String
-    Default: "autoBudget110prc"
-    Description: "Budget name"
-
   Amount:
     Type: Number
     Default: 110
@@ -15,18 +10,17 @@ Parameters:
 
   Email:
     Type: String
-    #Default: "mateusz.jasinski+budget@gmail.com"
     AllowedPattern: '[^@]+@[^@]+\.[^@]+'
     Description: E-mail address to deliver notifications to
 
   LambdaDeployBucket:
     Type: String
     Default: "cfn-public-bucket-mjasinski128"
-    Description: S3 public(!) or accessible to all relevant deployment roles used for deployment
+    Description: S3 public(!) or readable to all relevant deployment roles used for deployment
 
   LambdaDeployPackage:
     Type: String
-    Default: "lambda-deployment-package.zip"
+    Default: "autobudget-lambda-deployment-package.zip"
     Description: Lambda package name (key in LambdaDeployBucket bucket)
 
 Resources:
@@ -34,7 +28,6 @@ Resources:
     Type: "Custom::AutoBudget"
     Properties:
       ServiceToken: !GetAtt LambdaFunction.Arn
-      Name: !Ref BudgetName
       Amount: !Ref Amount
       Email: !Ref Email
 
