@@ -10,9 +10,8 @@ Custom Resource is essentially a user defined construct in CFN template that is 
 
 ### Prerequisites ###
 
-
-#### Baic #### 
-* AWS CLI
+#### Basic #### 
+* AWS CLI or web console
 
 #### Advanced ####
 * python3
