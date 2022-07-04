@@ -14,9 +14,9 @@ Custom Resource is essentially a user defined construct in CFN template that is 
 * AWS CLI or web console
 
 #### Advanced ####
-* python3
-* pip
-* make
+* `python3`
+* `pip`
+* `make`
 
 ### Usage ###
 
@@ -33,21 +33,34 @@ Deploy to single AWS account with AWS CLI
 		--parameters "ParameterKey=Email,ParameterValue=SOME_EMAIL_ADDRESS"
 ```
 
+
 using provided scripts:
 
-`make deploy-budget EMAIL_ADDRESS=SOME_EMAIL_ADDRESS` - deploy resources using CFN template
-
-`make remove-budget` - remove budget with all created resources
+* `make deploy-budget EMAIL_ADDRESS=SOME_EMAIL_ADDRESS` - deploy resources using CFN template
+* `make remove-budget` - remove budget with all created resources
 
 
 Deploy as CFN StackSet to multiple OUs (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html)
 
+
+Parameters:
+* CFN `Amount` - Trigger value - i.e. 110 is 110% of reference value
+* CFN `LambdaDeployBucket` / Make `LAMBDA_DEPLOY_BUCKET` - Name of S3 bucket for Lambda artefact. Default: `cfn-public-bucket-mjasinski128`
+* CFN `LambdaDeployPackage` / Make `LAMBDA_DEPLOY_PACKAGE` - Name of Lambda aftefact. Default: `autobudget-lambda-deployment-package.zip`
+* CFN `Email` / Make `EMAIL_ADDRESS` - E-mail address for buget notifications  - Default: `budget-alarms@example.com`
+
+
+
 #### Advanced ####
 
-`make package-lambda` - build deployment package and upload to shared location - required only after change to Lambda code.
+* `make package-lambda` - Build deployment package and upload to shared location - (required once & after change to Lambda code).
 
 
 ### Current limitations ###
-Provided sample relies on publicly readable S3 bucket - Lambda requires dedicated bundle/package that contains all dependancies. As such it has to be referenced by CFN template as zip bundle external to main template and must be accessible/redable during deployment.
-It is strongly recommended to use location that is restricted to only IAM role used for CloudFormation deployment.
 
+* Publicly readable S3 bucket - Project contains two parts, Lambda code in zip bundle and deployment template for CloudFormation.
+Lambda needs to be built first, before Cloudformation makes request for it and stored on public S3 bycket or one readable during deploymnet (by CFN deployment IAM role) 
+
+* Lambda bundle needs to be uploaded to S3 bucket before Clouddformation deployment.
+
+* Budget name is auto-generated and can not be changed - each Budget has unique name to avoid conflicts and crashes (benefit in StackSet deployments).
