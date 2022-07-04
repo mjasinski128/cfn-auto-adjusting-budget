@@ -5,7 +5,7 @@ New feature in AWS Budgets that enables customer to define limits based on your 
 This removes guess work and allows to easily target increase in your spend.
 
 Cloud Formation (CFN) resource for it is expected in future but is not yet supported, we have only web console and SDKs. CFN is extensible and in this particular case we will be using Custom Resources (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html).
-Custom Resource is essentially a user defined construct in CFN template that is fully programmable, in order to create, update or delete this new resource it invokes an AWS Lambda function that performs all the work. This implementastion uses Python SDK for AWS.
+Custom Resource is essentially a user defined construct in CFN template that is fully programmable, in order to create, update or delete this new resource it invokes an AWS Lambda function that performs all the work. This implementation uses Python SDK for AWS.
 
 
 ### Prerequisites ###
@@ -47,7 +47,7 @@ Parameters:
 * CFN `Amount` - Trigger value - i.e. 110 is 110% of reference value
 * CFN `LambdaDeployBucket` / Make `LAMBDA_DEPLOY_BUCKET` - Name of S3 bucket for Lambda artefact. Default: `cfn-public-bucket-mjasinski128`
 * CFN `LambdaDeployPackage` / Make `LAMBDA_DEPLOY_PACKAGE` - Name of Lambda aftefact. Default: `autobudget-lambda-deployment-package.zip`
-* CFN `Email` / Make `EMAIL_ADDRESS` - E-mail address for buget notifications  - Default: `budget-alarms@example.com`
+* CFN `Email` / Make `EMAIL_ADDRESS` - E-mail address for budget notifications  - Default: `budget-alarms@example.com`
 
 
 
@@ -59,8 +59,8 @@ Parameters:
 ### Current limitations ###
 
 * Publicly readable S3 bucket - Project contains two parts, Lambda code in zip bundle and deployment template for CloudFormation.
-Lambda needs to be built first, before Cloudformation makes request for it and stored on public S3 bycket or one readable during deploymnet (by CFN deployment IAM role) 
+Lambda needs to be built first, before CloudFormation makes request for it. Currently Lambda bundle is stored on public S3 bucket. Ideally should be moved to one readable during deployment (by CFN deployment IAM role) only. 
 
-* Lambda bundle needs to be uploaded to S3 bucket before Clouddformation deployment.
+* Lambda bundle needs to be uploaded to S3 bucket before CloudFormation deployment.
 
 * Budget name is auto-generated and can not be changed - each Budget has unique name to avoid conflicts and crashes (benefit in StackSet deployments).
